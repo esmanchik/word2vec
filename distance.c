@@ -29,7 +29,7 @@ int main(int argc, char **argv) {
   float dist, len, bestd[N], vec[max_size];
   long long words, size, a, b, c, d, cn, bi[100];
   char ch;
-  float *M;
+  float *M, v;
   char *vocab;
   if (argc < 2) {
     printf("Usage: ./distance <FILE>\nwhere FILE contains word projections in the BINARY FORMAT\n");
@@ -110,12 +110,23 @@ int main(int argc, char **argv) {
     for (a = 0; a < size; a++) vec[a] = 0;
     for (b = 0; b < cn; b++) {
       if (bi[b] == -1) continue;
-      for (a = 0; a < size; a++) vec[a] += M[a + bi[b] * size];
+      printf("vector[%d] = ", bi[b]);
+      for (a = 0; a < size; a++) {
+          v = M[a + bi[b] * size];
+          printf("%f ", v);
+          vec[a] += M[a + bi[b] * size];
+      }
+      printf("\n");
     }
     len = 0;
     for (a = 0; a < size; a++) len += vec[a] * vec[a];
     len = sqrt(len);
-    for (a = 0; a < size; a++) vec[a] /= len;
+    printf("\nvector / %f = ", len);
+    for (a = 0; a < size; a++) {
+        vec[a] /= len;
+        printf("%f ", vec[a]);
+    }
+    printf("\n");
     for (a = 0; a < N; a++) bestd[a] = -1;
     for (a = 0; a < N; a++) bestw[a][0] = 0;
     for (c = 0; c < words; c++) {
