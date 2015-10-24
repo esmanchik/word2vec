@@ -97,7 +97,7 @@ public:
         for (a = 0; a < N; a++) bestw = "";
         for (c = 0; c < words; c++) {
             std::string str = vocab[c];
-            if ('0' > str[0] || str[0] > '9') continue;
+            if ('0' > str[0] || str[0] > '9' || str.length() != 8) continue;
             dist = 0;
             for (a = 0; a < size; a++) dist += vec[a] * M[a + c * size];
             if (dist > bestd) {
