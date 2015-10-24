@@ -9,6 +9,7 @@ int line2vec(char *line, word_vectors & vectors, std::vector<float> & vec) {
     vec.resize(size);
     tokenize(line, [&vectors, line, size, &vec, &len, &wc, &cl](const char *word) {
         if (wc) {
+            printf("%s ", word);
             // search through the known words and create vector
             const float * v = vectors.find_vector(word);
             if (v == NULL) return;
@@ -25,15 +26,16 @@ int line2vec(char *line, word_vectors & vectors, std::vector<float> & vec) {
         }
         wc++;
     });
+    printf("\n");
     // normalize vector
     //vectors.norm_vector(vec);
     size_t a;
     for (a = 0; a < size; a++) len += vec[a] * vec[a];
     len = sqrt(len);
-    vectors.norm_vector(vec);
+    //vectors.norm_vector(vec);
     //printf("\nvector / %f = ", len);
     for (a = 0; a < size; a++) {
-        //vec[a] /= len;
+        vec[a] /= len;
         //printf("%f ", vec[a]);
     }
     //printf("\n\n");
@@ -61,11 +63,13 @@ int main(int argc, char **argv) {
         line = fgets(buf, sizeof(buf), stdin);
         if (line == NULL) break;
 	n++;
+        printf("%s", line);
         // create vector from line
         expected = line2vec(line, vectors, vector);
         // recognize
         vectors.closest(vector, word);
         actual = str2class(word.c_str());
+        printf("closest=%s, expected=%d, actual=%d\n", word.c_str(), expected, actual);
         if (expected != actual) {
             errors++;
         }
